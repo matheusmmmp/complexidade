@@ -1,0 +1,289 @@
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="./lib/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="./lib/chosen/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- <script src="./lib/bootstrap/bootstrap-input-spinner.js"></script> -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    
+    <!-- <script type="text/javascript" src="./cars.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <link rel="stylesheet" type="text/css" href="./lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="./lib/bootstrap/dist/css/bootstrap.min.css">
+    
+    <title>Trabalho de IA</title>
+<!--        <div class="load"> <img src="kchow.gif"></div>-->
+
+</head>
+
+
+
+<body>
+
+	<div class="form-group corpo">
+        
+            <h1>Hilha Viado</h1>
+        <br>
+        
+			<!-- <div class="row"> -->
+
+			  <div class="row col-md-12">
+                  <div class="col-md-6">
+                    <label for="sel1">qtdTarefas: </label>
+                    <select id="qtdTarefas" required="true" type="number">
+                        <option value="1.5">1.5</option>
+                        <option value="2">2</option>
+                     </select>
+
+                  <div class="col-md-6">
+                    <label>qtdMaquinas:</label>
+                    <select id="qtdMaquinas" required="true" type="number">
+                        <option value="3">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    
+                     </select>            
+                  </div>
+			  </div>
+
+			 
+            <!-- </div> -->
+            
+<!--			Carregue o arquivo json: <input type="file" name="myFile" onchange="handleFiles(this.files)">-->
+			<br>
+
+            <div class="alinha">
+                <button type="button" onclick="aplicar()" class="btn btn-dark">Aplicar</button>
+            </div>
+
+	</div>
+    
+</body> 
+
+<script>
+    //    $(".select").chosen()
+
+
+
+
+    function aplicar(){
+
+        
+        var qtdMaquinas = $("#qtdMaquinas").val();
+        
+        //var qtdTarefas = Math.pow(qtdMaquinas,($("#qtdTarefas").val()));
+        var qtdTarefas = 5;
+        console.log(qtdTarefas);
+        var tarefas = [];
+        var maquinas = [];
+
+        for(var i = 0; i < qtdMaquinas; i++){
+            maquinas[i] = [];
+        }
+
+       for(var i = 0; i < qtdTarefas; i++){
+            maquinas[0][i] = Math.floor((Math.random() * 100) + 1);
+        }
+        
+        maquinas[0] = [28,16,29,58,32];
+      
+
+
+            
+
+        var verifica = true;
+        var contador = 0;
+        var maiorMakespan = 0;
+        var menorMakespan = 0;
+        var j = 0;
+        var soma_maior=0;
+        var soma_menor=0;
+        var somamk=0;
+        var contadortemporario=0;
+        var idmaiorvalor=0;
+        var idMaior=0;
+        var idMenor=0;
+        var pos=0;
+        var valorMenor=0;
+        var valorMaior=0;
+        var maior=0;
+        var menor=0;
+        var id=0;
+        var idMaquina=0;
+        var idtemp=0;
+    
+
+        do{
+
+            var contadortemporario=1;
+            do{
+              
+                var idmaiorvalor=getMaiorValor(maquinas,0);
+                maquinas[contadortemporario][0]=maquinas[0][idmaiorvalor];
+                maquinas[0][idmaiorvalor]=0;
+                contadortemporario++;
+            }while(hasEmptyMachine(maquinas)!=false);
+
+            maquinas = ordena(maquinas);
+
+            var atual=maquinas;
+            var futuro=getMelhora(atual);
+           
+            
+            if (getMaiorMakespan(atual) >= getMaiorMakespan(futuro)) {//a bucetuda
+                atual = futuro;                
+            } else {
+                contador++
+            }
+            if(contador == 30){
+                verifica = false;
+            }
+
+                                       
+            
+
+         
+            
+            contador++;
+
+        console.log(maquinas);
+        console.log(maiorMakespan);
+        }while(verifica);
+
+
+    }
+    
+    function ordena(maquinas){
+      var aux=0;
+    var qtdMaquinas=  $("#qtdMaquinas").val();
+ 
+        for(var j = 0; j < qtdMaquinas; j++){
+            for(var z = 0; z < maquinas[j].length; z++){        
+          for(var i = 0; i < maquinas[j].length; i++){
+                if(maquinas[j][i]>maquinas[j][i-1]){
+                    aux = maquinas[j][i-1];
+                    maquinas[j][i-1]=maquinas[j][i];  
+                    maquinas[j][i]=aux;
+                }
+            }
+        }
+        
+    }
+        return maquinas;
+    
+    }
+
+    function getMelhora(maquinas){//funcao q faz tudo 
+    var idMaior=getMaiorMakespan(maquinas);
+            console.log(idMaior);
+    var idMenor=getMenorMakespan(maquinas);
+            console.log(idMenor);
+    var valorMenor=getMenorValor(maquinas,idMenor);
+    var valorMaior=getMaiorValor(maquinas,idMaior);
+
+    var pos=0;
+
+            while(true){
+               
+                if(maquinas[idMenor][pos]==0 || maquinas[idMenor][pos]==null){
+                    break;
+                }
+                pos++;
+            }
+    
+            maquinas[idMenor][pos]=maquinas[idMaior][valorMaior];
+            maquinas[idMaior][valorMaior]=0;
+        return getMaiorMakespan(getMelhora);
+    }
+
+    function hasEmptyMachine(maquinas){
+        
+        for(var i = 0; i < maquinas.length; i++){
+            if(maquinas[i].length == 0){
+               return true;
+            }
+        }
+        
+        return false;
+    }
+
+    function getMakespan(maquinas, indice){
+        var somamk = 0;
+    
+        if(maquinas.length>0){
+            for(var i = 0; i < maquinas.length; i++){
+                somamk += maquinas[indice][i];
+            }
+        }
+        
+        return somamk;
+    }
+
+    function getMenorMakespan(maquinas){
+      
+        var menorMakespan=getMakespan(maquinas,0);
+        var idMaquina=0;
+       
+
+        var qtdMaquinas = $("#qtdMaquinas").val();
+        for(var j = 0; j < qtdMaquinas; j++){
+            var soma_menor = 0;
+           for(var i = 0; i < maquinas[i].length; i++){
+            soma_menor += maquinas[j][i];
+          
+        }
+        if(soma_menor<menorMakespan){
+            idMaquina= j;
+            menorMakespan=soma_menor;
+        }
+      
+   }                  
+    return idMaquina;
+    }
+    function getMaiorMakespan(maquinas){
+       
+        var maiorMakespan=getMakespan(maquinas,0);
+        var idMaquina=0;
+      
+
+        var qtdMaquinas = $("#qtdMaquinas").val();
+        for(var j = 0; j < qtdMaquinas; j++){
+            var soma_maior = 0;
+               for(var i = 0; i < maquinas[i].length; i++){
+                soma_maior += maquinas[j][i];
+              
+            }
+            if(soma_maior>maiorMakespan){
+                idMaquina=j;
+                maiorMakespan=soma_maior;
+            }
+           
+        }     
+        return idMaquina;
+    }
+    
+    function getMaiorValor(maquinas,id){
+        var maior=0;
+        for(var i = 0; i < maquinas.length; i++){
+               if( maquinas[id][i]>maior){
+                maior=maquinas[id][i];
+                   idtemp=i;
+               }
+              
+            }
+            return idtemp;
+    }
+    
+    function getMenorValor(maquinas,id){
+        var menor=1100;
+        for(var i = 0; i < maquinas.length; i++){
+               if( maquinas[id][i]<menor && maquinas[id][i]!= 0){
+                menor=maquinas[id][i];
+                idtemp=i;
+               }
+              
+            }
+            return idtemp;
+    }
+</script>
+   

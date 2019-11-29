@@ -71,7 +71,7 @@
         
         var qtdMaquinas = $("#qtdMaquinas").val();
         
-        var qtdTarefas = qtdMaquinas^($("#qtdTarefas").val());//n ta pegando o exponencial
+        var qtdTarefas = Math.pow(qtdMaquinas,($("#qtdTarefas").val()));
         console.log(qtdTarefas);
         var tarefas = [];
         var maquinas = [];
@@ -95,6 +95,7 @@
         var verifica = true;
         var contador = 0;
         var maiorMakespan = 0;
+        var menorMakespan = 0;
 
         do{
             if(contador == 30){
@@ -107,6 +108,9 @@
                     maiorMakespan = getMakespan(maquinas, i);
                     principal = i;
                     // console.log(i);
+                }else  if(getMakespan(maquinas, i) < menorMakespan){
+                    menorMakespan = getMakespan(maquinas, i);
+                    
                 }
 
                 // console.log(qtdMaquinas);
