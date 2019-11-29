@@ -73,7 +73,7 @@
         
         //var qtdTarefas = Math.pow(qtdMaquinas,($("#qtdTarefas").val()));
         var qtdTarefas = 5;
-        console.log(qtdTarefas);
+        
         var tarefas = [];
         var maquinas = [];
 
@@ -130,7 +130,7 @@
             var futuro=getMelhora(atual);
            
             
-            if (getMaiorMakespan(atual) >= getMaiorMakespan(futuro)) {//a bucetuda
+            if (getMaiorMakespan(atual,0) >= getMaiorMakespan(futuro,contador)) {//a bucetuda
                 atual = futuro;                
             } else {
                 contador++
@@ -160,11 +160,22 @@
         for(var j = 0; j < qtdMaquinas; j++){
             for(var z = 0; z < maquinas[j].length; z++){        
           for(var i = 0; i < maquinas[j].length; i++){
+
+                  
+                if(maquinas[j][i]==0){
+            
+
+                        maquinas[j].splice(i, 1);
+
+ 
+                    }
                 if(maquinas[j][i]>maquinas[j][i-1]){
                     aux = maquinas[j][i-1];
                     maquinas[j][i-1]=maquinas[j][i];  
                     maquinas[j][i]=aux;
                 }
+               
+                
             }
         }
         
@@ -174,10 +185,10 @@
     }
 
     function getMelhora(maquinas){//funcao q faz tudo 
-    var idMaior=getMaiorMakespan(maquinas);
-            console.log(idMaior);
+    var idMaior=getMaiorMakespan(maquinas,0);   
+    var valormk=0;
     var idMenor=getMenorMakespan(maquinas);
-            console.log(idMenor);
+
     var valorMenor=getMenorValor(maquinas,idMenor);
     var valorMaior=getMaiorValor(maquinas,idMaior);
 
@@ -193,7 +204,8 @@
     
             maquinas[idMenor][pos]=maquinas[idMaior][valorMaior];
             maquinas[idMaior][valorMaior]=0;
-        return getMaiorMakespan(getMelhora);
+           
+            return getMaiorMakespan(maquinas,0);
     }
 
     function hasEmptyMachine(maquinas){
@@ -240,31 +252,27 @@
    }                  
     return idMaquina;
     }
-    function getMaiorMakespan(maquinas){
+    function getMaiorMakespan(maquinas,contador){
        
         var maiorMakespan=getMakespan(maquinas,0);
         var idMaquina=0;
       
 
         var qtdMaquinas = $("#qtdMaquinas").val();
-        for(var j = 0; j < qtdMaquinas; j++){
-            var soma_maior = 0;
-               for(var i = 0; i < maquinas[i].length; i++){
-                soma_maior += maquinas[j][i];
-              
-            }
+        for(var j = 1; j < qtdMaquinas; j++){
+            var soma_maior=getMakespan(maquinas,j);
             if(soma_maior>maiorMakespan){
                 idMaquina=j;
                 maiorMakespan=soma_maior;
             }
            
         }     
-        return idMaquina;
+        return idMaquina-contador;
     }
     
     function getMaiorValor(maquinas,id){
         var maior=0;
-        for(var i = 0; i < maquinas.length; i++){
+        for(var i = 0; i < maquinas[id].length; i++){
                if( maquinas[id][i]>maior){
                 maior=maquinas[id][i];
                    idtemp=i;
@@ -276,7 +284,7 @@
     
     function getMenorValor(maquinas,id){
         var menor=1100;
-        for(var i = 0; i < maquinas.length; i++){
+        for(var i = 0; i < maquinas[id].length; i++){
                if( maquinas[id][i]<menor && maquinas[id][i]!= 0){
                 menor=maquinas[id][i];
                 idtemp=i;
